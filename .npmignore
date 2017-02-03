@@ -1,0 +1,7 @@
+spec
+.travis.yml
+.editorconfig
+tsconfig.json
+tslint.json
+.npmignore
+*.spec.ts
