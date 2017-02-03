@@ -1,4 +1,4 @@
-# jasmine-promise
+# jasmine-promise-wrapper
 
 [![Build Status](https://travis-ci.org/svi3c/jasmine-promise.svg?branch=master)](https://travis-ci.org/svi3c/jasmine-promise)
 
@@ -28,7 +28,7 @@ This comes in handy when expecting promises to be rejected.
 ## Simple example
 
 ```ts
-import {it} from "jasmine-promise";
+import {it} from "jasmine-promise-wrapper";
 
 const unit = () =>
   new Promise(resolve =>
