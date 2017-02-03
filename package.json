@@ -1,5 +1,5 @@
 {
-  "name": "jasmine-promise",
+  "name": "jasmine-promise-wrapper",
   "version": "0.0.1",
   "description": "Promise handling for jasmine",
   "main": "index.js",
