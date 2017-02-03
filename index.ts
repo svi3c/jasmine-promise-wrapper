@@ -1,35 +1,30 @@
-interface IDoneCallback {
-  (): void;
-  fail(error: Error): void;
-}
+const promising = (fn: () => any) =>
+  (done: any) =>
+    Promise.resolve(fn()).then(() => done(), done.fail);
 
-const promising = (action: () => any) =>
-  (done: IDoneCallback) =>
-    Promise.resolve(action()).then(() => done(), done.fail);
-
-const itWithPromise = (expectation: string, assertion: () => Promise<any> | any, timeout?: number) => {
-  it(expectation, promising(assertion), timeout);
+const itWithPromise = (expectation: string, fn: () => any, timeout?: number) => {
+  it(expectation, promising(fn), timeout);
 };
 
-const beforeEachWithPromise = (action: () => Promise<any> | any, timeout?: number) => {
-  beforeEach(promising(action), timeout);
+const beforeEachWithPromise = (fn: () => any, timeout?: number) => {
+  beforeEach(promising(fn), timeout);
 };
 
-const afterEachWithPromise = (action: () => Promise<any> | any, timeout?: number) => {
-  afterEach(promising(action), timeout);
+const afterEachWithPromise = (fn: () => any, timeout?: number) => {
+  afterEach(promising(fn), timeout);
 };
 
-const beforeAllWithPromise = (action: () => Promise<any> | any, timeout?: number) => {
-  beforeAll(promising(action), timeout);
+const beforeAllWithPromise = (fn: () => any, timeout?: number) => {
+  beforeAll(promising(fn), timeout);
 };
 
-const afterAllWithPromise = (action: () => Promise<any> | any, timeout?: number) => {
-  afterAll(promising(action), timeout);
+const afterAllWithPromise = (fn: () => any, timeout?: number) => {
+  afterAll(promising(fn), timeout);
 };
 
 const invert = (promise: Promise<any>) =>
   promise.then(
-    resolution => Promise.reject(new Error(`Promise should be rejected, but it is resolved with: ${resolution}`)),
+    resolution => Promise.reject(resolution),
     err => err
   );
 

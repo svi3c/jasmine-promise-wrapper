@@ -10,37 +10,55 @@ import {
 const defer = (timeout = 0) =>
   new Promise(resolve => setTimeout(resolve, timeout));
 
-let suiteRunning = false;
-let running = false;
-
-const start = () => running = true;
-const stop = () => running = false;
-const startSuite = () => suiteRunning = true;
-const stopSuite = () => suiteRunning = false;
-
-afterAll(() => expect(suiteRunning).toBe(false));
-
 describe("jasmine-promise", () => {
-
-  beforeAll(() => defer(10).then(startSuite));
-  afterAll(() => defer(10).then(stopSuite));
-
-  beforeEach(() => {
-    expect(suiteRunning).toBe(true);
-    return defer(10).then(start);
-  });
-  afterEach(() => defer(10).then(() => expect(running).toBe(false)));
-  beforeEach(() => expect(running).toBe(true));
 
   describe("it()", () => {
 
+    let finished = false;
+
+    afterEach(() => expect(finished).toBe(true));
+
     it("should wait for promise resolution", () =>
-      defer(10).then(stop));
+      defer(10).then(() => finished = true));
 
-    it("should work without returning promises", () => {
-      stop();
-    });
+    it("should work without returning promises", () => finished = true);
 
+  });
+
+  describe("beforeEach()", () => {
+
+    let started = false;
+
+    beforeEach(() => defer(10).then(() => started = true));
+
+    it("should wait for promise resolution", () => expect(started).toBe(true));
+  });
+
+  describe("afterEach()", () => {
+
+    let stopped = false;
+
+    afterEach(() => defer(10).then(() => expect(stopped).toBe(true)));
+
+    it("should wait for promise resolution", () => defer(5).then(() => stopped = true));
+  });
+
+  describe("beforeAll()", () => {
+
+    let started = false;
+
+    beforeAll(() => defer(10).then(() => started = true));
+
+    it("should wait for promise resolution", () => expect(started).toBe(true));
+  });
+
+  describe("afterAll()", () => {
+
+    let stopped = false;
+
+    afterAll(() => defer(10).then(() => expect(stopped).toBe(true)));
+
+    it("should wait for promise resolution", () => defer(5).then(() => stopped = true));
   });
 
   describe("invert()", () => {
@@ -50,18 +68,16 @@ describe("jasmine-promise", () => {
 
       let err = await invert(Promise.reject(error));
       expect(err).toBe(error);
-      stop();
     });
 
     it("should reject if the promise was resolved", async () => {
-      let error: Error;
+      let rejection: string;
       try {
-        await(invert(new Promise(resolve => setTimeout(() => resolve("foo")))));
+        await invert(new Promise(resolve => resolve("foo")));
       } catch (err) {
-        error = err;
+        rejection = err;
       }
-      expect(error.message).toEqual("Promise should be rejected, but it is resolved with: foo");
-      stop();
+      expect(rejection).toEqual("foo");
     });
 
   });
