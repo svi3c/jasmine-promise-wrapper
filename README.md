@@ -1,5 +1,7 @@
 # jasmine-promise
 
+[![Build Status](https://travis-ci.org/svi3c/jasmine-promise.svg?branch=master)](https://travis-ci.org/svi3c/jasmine-promise)
+
 ## Purpose of this library
 
 This library shall simplify promise handling within jasmine.
