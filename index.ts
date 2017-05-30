@@ -6,6 +6,10 @@ const itWithPromise = (expectation: string, fn: () => any, timeout?: number) => 
   it(expectation, promising(fn), timeout);
 };
 
+const fitWithPromise = (expectation: string, fn: () => any, timeout?: number) => {
+  fit(expectation, promising(fn), timeout);
+};
+
 const beforeEachWithPromise = (fn: () => any, timeout?: number) => {
   beforeEach(promising(fn), timeout);
 };
@@ -30,6 +34,7 @@ const invert = (promise: Promise<any>) =>
 
 export {
   itWithPromise as it,
+  fitWithPromise as fit,
   beforeEachWithPromise as beforeEach,
   afterEachWithPromise as afterEach,
   beforeAllWithPromise as beforeAll,
